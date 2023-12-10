@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: mypassword
-      MYSQL_DATABASE: yelp_data
+      MYSQL_DATABASE: customer_data
     ports:
       - "3306:3306"
     volumes:
