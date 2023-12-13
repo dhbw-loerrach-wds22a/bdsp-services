@@ -15,7 +15,7 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - "8081:80"
+      - "8082:80"
     depends_on:
       - mysql
   spark-master:
@@ -31,7 +31,7 @@ services:
       - ./data/spark-data:/bitnami
   spark-worker:
     build:
-      context: ../bdsp-extract-pipe
+      context: ./spark-master
       dockerfile: Dockerfile
     environment:
       - SPARK_MODE=worker
@@ -39,7 +39,7 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ../bdsp-extract-pipe:/app
+      - ../bdsp-extract-pipe/spark:/app
     working_dir: /app
   minio:
     image: minio/minio:latest
@@ -51,3 +51,21 @@ services:
     volumes:
       - ./data/minio-data:/data
     command: server /data
+  airflow-webserver:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=Local
+      - AIRFLOW_CONN_SPARK_DEFAULT=spark://spark-master:7077
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql+pymysql://root:mypassword@mysql/airflow
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../bdsp-extract-pipe/dags:/opt/airflow/dags
+      - ../bdsp-extract-pipe/spark:/opt/airflow/spark
+      - ./logs/airflow:/usr/local/airflow/logs
+    depends_on:
+      - mysql
+      - spark-master
