@@ -55,11 +55,16 @@ This repository contains a Docker Compose setup for orchestrating a multi-contai
 
 ## Repository setup
 Clone the repositories from [GitHub](https://github.com/dhbw-loerrach-wds22a)
-1. bdsp-setup
-3. bdsp-extract-pipe
-4. bdsp-services
+1. [bdsp-setup](https://github.com/dhbw-loerrach-wds22a/bdsp-setup)
+3. [bdsp-extract-pipe](https://github.com/dhbw-loerrach-wds22a/bdsp-extract-pipe)
+4. [bdsp-services](https://github.com/dhbw-loerrach-wds22a/bdsp-services)
 
 Layout of the repositories:
+
+Project folder
+  - bdsp-setup
+  - bdsp-extract-pipe
+  - bdsp-services
 ### Usage
 
 1. **Prerequisites**: Docker and Docker Compose must be installed on your system.
