@@ -1,5 +1,3 @@
-EDA
-
 # Repository README
 
 ## Overview
