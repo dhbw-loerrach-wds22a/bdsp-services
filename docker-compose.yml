@@ -69,3 +69,15 @@ services:
     depends_on:
       - mysql
       - spark-master
+  jupyter-pyspark:
+    build:
+      context: ./apps
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../bdsp-apps:/home/jovyan/work
+    environment:
+      - GRANT_SUDO=yes
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token=''
