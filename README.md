@@ -56,6 +56,7 @@ Clone the repositories from [GitHub](https://github.com/dhbw-loerrach-wds22a)
 1. [bdsp-setup](https://github.com/dhbw-loerrach-wds22a/bdsp-setup)
 3. [bdsp-extract-pipe](https://github.com/dhbw-loerrach-wds22a/bdsp-extract-pipe)
 4. [bdsp-services](https://github.com/dhbw-loerrach-wds22a/bdsp-services)
+5. [bdsp-apps](https://github.com/dhbw-loerrach-wds22a/bdsp-apps)
 
 Layout of the repositories:
 
