@@ -1,55 +1,83 @@
-# Services Repository
+# Repository README
 
-## Description
-This repository contains a multi-container Docker application that includes MySQL, MongoDB, Redis, PHPMyAdmin, a FastAPI backend, and a React frontend. It's designed to provide a comprehensive development environment for web applications.
+## Overview
 
-## Components
-- **MySQL**: A relational database management system.
-- **PHPMyAdmin**: A free and open-source administration tool for MySQL and MariaDB.
-- **Spark-Master**: The central component of Apache Spark that manages resource allocation and task scheduling across the Spark cluster.
-- **Spark-Worker**: A node in a Spark cluster that executes tasks assigned by the Spark Master, handling data processing and computation.
-- **Minio**: An open-source, high-performance object storage server, compatible with Amazon S3, designed for storing unstructured data like photos, videos, and backups.
+This repository contains a Docker Compose setup for orchestrating a multi-container Docker application. It includes services for MySQL, phpMyAdmin, Apache Spark (Master and Worker), MinIO, and Apache Airflow. This configuration is well-suited for data processing and analytics tasks, providing a robust and scalable platform for managing, storing, and processing large datasets.
 
-## Setup and Installation
+## Services
 
-### Prerequisites
-- Docker and Docker Compose installed on your machine.
+### MySQL
+- **Image**: `mysql:latest`
+- **Purpose**: Database service.
+- **Environment Variables**: Root password and database name.
+- **Ports**: 3306
+- **Volumes**: Data persistence in `./data/mysql-data`.
 
+### phpMyAdmin
+- **Image**: `phpmyadmin/phpmyadmin`
+- **Purpose**: Web interface for MySQL database management.
+- **Environment Variables**: Host and port configuration for MySQL.
+- **Ports**: 8082
+- **Dependencies**: Depends on the MySQL service.
 
-### Repository setup
+### Spark Master
+- **Build Context**: `./spark-master`
+- **Purpose**: Master node for Apache Spark.
+- **Environment Variables**: Spark mode set to master.
+- **Ports**: 8080, 7077
+- **Volumes**: Data persistence in `./data/spark-data`.
+
+### Spark Worker
+- **Build Context**: `./spark-master`
+- **Purpose**: Worker node for Apache Spark.
+- **Environment Variables**: Spark mode and master URL.
+- **Dependencies**: Depends on the Spark Master service.
+- **Volumes**: Application code in `../bdsp-extract-pipe/spark`.
+- **Working Directory**: `/app`
+
+### MinIO
+- **Image**: `minio/minio:latest`
+- **Purpose**: Object storage server.
+- **Environment Variables**: Root user and password.
+- **Ports**: 9000
+- **Volumes**: Data persistence in `./data/minio-data`.
+- **Command**: `server /data`
+
+### Airflow Webserver
+- **Build Context**: `./airflow`
+- **Purpose**: Workflow management and scheduling.
+- **Environment Variables**: Executor type, Spark connection, and database connection.
+- **Ports**: 8081
+- **Volumes**: DAGs in `../bdsp-extract-pipe/dags`, Spark code in `../bdsp-extract-pipe/spark`, and logs in `./logs/airflow`.
+- **Dependencies**: Depends on MySQL and Spark Master services.
+
+## Repository setup
 Clone the repositories from [GitHub](https://github.com/dhbw-loerrach-wds22a)
-1. bdsp-setup
-3. bdsp-extract-pipe
-4. bdsp-services
+1. [bdsp-setup](https://github.com/dhbw-loerrach-wds22a/bdsp-setup)
+3. [bdsp-extract-pipe](https://github.com/dhbw-loerrach-wds22a/bdsp-extract-pipe)
+4. [bdsp-services](https://github.com/dhbw-loerrach-wds22a/bdsp-services)
+5. [bdsp-apps](https://github.com/dhbw-loerrach-wds22a/bdsp-apps)
 
 Layout of the repositories:
 
-![Alt text](./img/repository_layout.png "Optional title")
-### Installation Steps
-1. Clone the repository to your local machine.
-2. Navigate to the directory containing `docker-compose.yml`.
-3. Run the following command to build the projects. keep in mind that 4 repositories have to be in place. 
-   ```bash
-   docker-compose build
+Project folder
+  - bdsp-setup
+  - bdsp-extract-pipe
+  - bdsp-services
+### Usage
 
-4. Run the following command to start all services:
-   ```bash
-   docker-compose up -d
-5. To stop the services, use:
-    ```bash
-    docker-compose down
-   
-## Accessing the Services
+1. **Prerequisites**: Docker and Docker Compose must be installed on your system.
+2. **Starting Services**: Run `docker-compose up` in the root directory of this repository.
+3. **Accessing Services**: Use the specified ports to access each service (e.g., phpMyAdmin at `localhost:8082`).
 
-- **MySQL** is accessible on port `3306`. Default root password is `mypassword`.
-- **PHPMyAdmin** can be accessed at [http://localhost:8080](http://localhost:8080).
+## Customization
 
-## Data Persistence
-- MySQL data is persisted in `./data/mysql-data`.
+You can customize the configurations by modifying the `docker-compose.yml` file according to your requirements. This includes changing environment variables, ports, and volume mappings.
 
-## Usage
-- Use PHPMyAdmin to manage your MySQL databases.
+## Contributing
+
+Contributions to improve or extend the functionality are welcome. Please submit pull requests with detailed descriptions of changes or enhancements.
 
 ## License
 
-[MIT](LICENSE)
+MIT
